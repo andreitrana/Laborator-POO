@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{1E5D7166-CC0C-4E57-B705-0225453CD525}</ProjectGuid>
-    <RootNamespace>Lab4</RootNamespace>
+    <ProjectGuid>{CC1C8357-A12C-414D-9892-1F299C8BC24C}</ProjectGuid>
+    <RootNamespace>Lab6</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -138,15 +138,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Produs.cpp" />
-    <ClCompile Include="Repo.cpp" />
+    <ClCompile Include="Repository.cpp" />
+    <ClCompile Include="Service.cpp" />
     <ClCompile Include="tests.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Produs.h" />
-    <ClInclude Include="Repo.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Repository.h" />
+    <ClInclude Include="Service.h" />
     <ClInclude Include="tests.h" />
+    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

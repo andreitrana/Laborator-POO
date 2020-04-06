@@ -1,100 +1,214 @@
 #include "tests.h"
 
-void TestGetters()
+//Entity.h
+void testEntityConstructors()
 {
-	Produs v("Lapte", Produs::data(22, 3, 2020), 3.4);
-	assert(strcmp(v.getNume(), "Lapte") == 0);
-	assert(v.getData().zi == 22 && v.getData().luna == 3 && v.getData().an == 2020);
-	assert(v.getPret() == 3.4);
+	Carte a, b("Marile sperante", "Charles Dickens", false), c(b);
+	assert(a.getStatus() == false);
+	assert(strcmp(b.getTitlu(), "Marile sperante") == 0 && strcmp(b.getAutor(),"Charles Dickens")==0 && b.getStatus()==false);
+	assert(strcmp(c.getTitlu(), "Marile sperante") == 0 && strcmp(c.getAutor(), "Charles Dickens") == 0 && c.getStatus() == false);
 }
 
-void TestSetters()
+void testEntitySetters()
 {
-	Produs v("Unt", Produs::data(19, 7, 2019), 6.0);
-	v.setNume("Margarina");
-	v.setData(Produs::data(20, 8, 2019));
-	double pret = 6.2;
-	v.setPret(pret);
-	assert(strcmp(v.getNume(), "Margarina") == 0);
-	assert(v.getData().zi == 20 && v.getData().luna == 8 && v.getData().an == 2019);
-	assert(v.getPret() == 6.2);
+	Carte a("Marile sperante", "Charles Dickens", false);
+	a.setTitlu("Mandrie si prejudecata");
+	a.setAutor("Jane Austen");
+	a.setStatus(true);
+	assert(strcmp(a.getTitlu(), "Mandrie si prejudecata") == 0 && strcmp(a.getAutor(), "Jane Austen") == 0 && a.getStatus() == true);
 }
 
-void TestOperator()
+void testEntityGettters()
 {
-	Produs v("Zahar", Produs::data(20, 4, 2014), 5.4);
-	Produs v1 = v;
-	assert(strcmp(v1.getNume(), "Zahar") == 0);
-	assert(v1.getData().zi == 20 && v1.getData().luna == 4 && v1.getData().an == 2014);
-	assert(v1.getPret() == 5.4);
+	Carte a("Marile sperante", "Charles Dickens", false);
+	assert(strcmp(a.getTitlu(), "Marile sperante") == 0 && strcmp(a.getAutor(), "Charles Dickens") == 0 && a.getStatus()==false);
 }
 
-void TestProdusConstructors()
+void testEntityOperators()
 {
-	Produs a, b("Salam", Produs::data(21, 5, 2017), 4.5), c = b;
-	assert(strcmp(a.getNume(), "") == 0 && a.getData().zi == 0 && a.getData().luna == 0 && a.getData().an == 0 && a.getPret() == 0.0);
-	assert(strcmp(b.getNume(), "Salam") == 0 && b.getData().zi == 21 && b.getData().luna == 5 && b.getData().an == 2017 && b.getPret() == 4.5);
-	assert(strcmp(c.getNume(), "Salam") == 0 && c.getData().zi == 21 && c.getData().luna == 5 && c.getData().an == 2017 && c.getPret() == 4.5);
+	Carte a("Marile sperante", "Charles Dickens", false), b;
+	b = a;
+	assert(b == a);
 }
 
-void TestRepoConstructors()
+//Repository.h
+void testRepositoryConstructors()
+{
+	std::deque<Carte> d;
+	d.push_back(Carte("Marile sperante","Charles Dickens", false));
+	Repo a, b(&d), c(b);
+	assert(a.getAll().size() == 0);
+	assert(strcmp(b.getAll()[0].getTitlu(), "Marile sperante") == 0 && strcmp(b.getAll()[0].getAutor(), "Charles Dickens") == 0 && b.getAll()[0].getStatus() == false);
+	assert(strcmp(c.getAll()[0].getTitlu(), "Marile sperante") == 0 && strcmp(c.getAll()[0].getAutor(), "Charles Dickens") == 0 && c.getAll()[0].getStatus() == false);
+}
+
+void testRepositorySetters()
+{
+	std::deque<Carte> d,e;
+	d.push_back(Carte("Marile sperante", "Charles Dickens", false));
+	e.push_back(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	Repo a(&d);
+	a.setAll(e);
+	assert(strcmp(a.getAll()[0].getTitlu(), "Mandrie si prejudecata") == 0 && strcmp(a.getAll()[0].getAutor(), "Jane Austen") == 0 && a.getAll()[0].getStatus() == false);
+}
+
+void testRepositoryGetters()
+{
+	std::deque<Carte> d,e;
+	d.push_back(Carte("Marile sperante", "Charles Dickens", false));
+	d.push_back(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	Repo a(&d);
+	e = a.getAll();
+	assert(strcmp(e[0].getTitlu(), "Marile sperante") == 0 && strcmp(e[0].getAutor(), "Charles Dickens") == 0 && e[0].getStatus() == false);
+	assert(strcmp(e[1].getTitlu(), "Mandrie si prejudecata") == 0 && strcmp(e[1].getAutor(), "Jane Austen") == 0 && e[1].getStatus() == false);
+}
+
+void testRepositoryAddItem()
 {
 	Repo a;
-	assert(a.getSize() == 0);
-	Produs v[3];
-	Repo b(v, 3), c = b;
-	assert(b.getSize() == 3);
-	assert(c.getSize() == 3);
+	a.addItem(Carte("Marile sperante", "Charles Dickens", false));
+	a.addItem(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	assert(strcmp(a.getAll()[0].getTitlu(), "Marile sperante") == 0);
+	assert(strcmp(a.getAll()[1].getTitlu(), "Mandrie si prejudecata") == 0);
 }
 
-void TestRepoAdd()
+void testRepositoryOperators()
 {
-	Produs a, b("Faina", Produs::data(21, 5, 2017), 4.5), c = b;
-	Produs v[3] = { a,b,c };
-	Repo r(v, 3);
-	r.addProd(Produs("Zahar", Produs::data(22, 2, 2018), 5.5));
-	assert(r.getSize() == 4);
+	std::deque<Carte> d;
+	d.push_back(Carte("Marile sperante", "Charles Dickens", false));
+	Repo a(&d), b;
+	b = a;
+	assert(strcmp(b.getAll()[0].getTitlu(), "Marile sperante") == 0 && strcmp(b.getAll()[0].getAutor(), "Charles Dickens") == 0 && b.getAll()[0].getStatus() == false);
 }
 
-void TestGetSize()
+//Service.h
+void testServiceConstructors()
 {
-	Repo v;
-	for (int i = 0; i < 5; i++)
-		v.addProd(Produs("Malai", Produs::data(20, 4, 2019), 4.5));
-	assert(v.getSize() == 5);
+	std::deque<Carte> s;
+	s.push_back(Carte("Marile sperante","Charles Dickens", false));
+	s.push_back(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	Repo r(&s);
+	Service a, b(&r), c(b);
+	assert(a.getRepo().getAll().size() == 0);
+	assert(strcmp(b.getRepo().getAll()[0].getTitlu(), "Marile sperante") == 0 && strcmp(b.getRepo().getAll()[0].getAutor(), "Charles Dickens") == 0 && b.getRepo().getAll()[0].getStatus() == false);
+	assert(strcmp(c.getRepo().getAll()[0].getTitlu(), "Marile sperante") == 0 && strcmp(c.getRepo().getAll()[0].getAutor(), "Charles Dickens") == 0 && c.getRepo().getAll()[0].getStatus() == false);
 }
 
-void TestGetProd()
+void testServiceSetters()
 {
-	Repo v;
-	Produs a("Cereale", Produs::data(21, 2, 2012), 7.6), b("Ulei", Produs::data(23, 4, 2015), 4.75), c("Otet", Produs::data(21, 2, 2012), 4.99);
-	v.addProd(a);
-	v.addProd(b);
-	v.addProd(c);
-	assert(v.getProd(2) == c);
+	Service a;
+	a.add(Carte("Marile sperante", "Charles Dickens", false));
+	a.update_title("Marile sperante","Mandrie si prejudecata");
+	a.update_autor("Mandrie si prejudecata", "Jane Austen");
+	a.update_status("Mandrie si prejudecata", true);
+	assert(strcmp(a.getRepo().getAll()[0].getTitlu(), "Mandrie si prejudecata") == 0 && strcmp(a.getRepo().getAll()[0].getAutor(), "Jane Austen") == 0 && a.getRepo().getAll()[0].getStatus() == true);
 }
 
-void TestReducere()
+void testServiceGetters()
 {
-	Repo v;
-	v.addProd(Produs("Cereale", Produs::data(21, 2, 2012), 7.6));
-	v.addProd(Produs("Ulei", Produs::data(23, 4, 2015), 4.5));
-	v.addProd(Produs("Otet", Produs::data(21, 2, 2012), 4.9));
-	v.addProd(Produs("Zmeura", Produs::data(25, 8, 2018), 11));
-	v.addProd(Produs("Banane", Produs::data(12, 6, 2017), 3.5));
-	v.Reducere(Produs::data(1, 1, 2017));
-	assert(v.getProd(0).getPret() == 6.84 && v.getProd(1).getPret() == 4.05 && v.getProd(2).getPret() == 4.41);
+	std::deque<Carte> d;
+	d.push_back(Carte("Mandrie si prejudecata", "Charles Dickens", false));
+	d.push_back(Carte("Marile sperante", "Jane Austen", false));
+	Repo r(&d);
+	Service a(&r);
+	assert(a.getRepo().getAll()[0] == d[0] && a.getRepo().getAll()[1] == d[1]);
 }
+
+void testServiceOperators()
+{
+	std::deque<Carte> s;
+	s.push_back(Carte("Marile sperante", "Charles Dickens", false));
+	s.push_back(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	Repo r(&s);
+	Service a, b(&r);
+	a = b;
+	assert(strcmp(a.getRepo().getAll()[0].getTitlu(), "Marile sperante") == 0 && strcmp(a.getRepo().getAll()[0].getAutor(), "Charles Dickens") == 0 && a.getRepo().getAll()[0].getStatus() == false);
+}
+
+void testServiceAddFunction()
+{
+	Service s;
+	s.add(Carte("Mandrie si prejudecata", "Charles Dickens", false));
+	assert(strcmp(s.getRepo().getAll()[0].getTitlu(), "Mandrie si prejudecata") == 0);
+}
+
+void testServiceDelFunction()
+{
+	Service s;
+	s.add(Carte("Marile sperante", "Charles Dickens", false));
+	s.del("Marile sperante");
+	assert(s.getRepo().getAll().size() == 0);
+}
+
+void testServiceFindFunction()
+{
+	Service s;
+	s.add(Carte("Marile sperante", "Charles Dickens", false));
+	s.add(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	s.add(Carte("Ocolul pamantului in 80 de zile", "Jules Verne", false));
+	assert(s.find("Ocolul pamantului in 80 de zile") == 2);
+}
+
+void testServiceImprumutFunction()
+{
+	Service s;
+	s.add(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	s.imprumut("Mandrie si prejudecata");
+	assert(s.getRepo().getAll()[0].getStatus() == true);
+}
+
+//UserInterface.h
+void testUserInterfaceConstructors()
+{
+	Service s;
+	s.add(Carte("Marile sperante", "Charles Dickens", false));
+	UI a, b(&s), c(b);
+	assert(strcmp(b.getService().getRepo().getAll()[0].getTitlu(), "Marile sperante") == 0);
+	assert(strcmp(c.getService().getRepo().getAll()[0].getTitlu(), "Marile sperante") == 0);
+}
+
+void testUserInterfaceSetters()
+{
+	Service s;
+	s.add(Carte("Marile sperante", "Charles Dickens", true));
+	UI u;
+	u.setService(&s);
+	assert(u.getService().getRepo().getAll()[0] == s.getRepo().getAll()[0]);
+}
+
+void testUserInterfaceGetters()
+{
+	Service s;
+	s.add(Carte("Marile sperante", "Mandrie si prejudecata", false));
+	s.add(Carte("Mandrie si prejudecata", "Jane Austen", false));
+	UI u(&s);
+	assert(u.getService().getRepo().getAll()[0] == s.getRepo().getAll()[0]);
+}
+
 
 void TestAll()
 {
-	TestProdusConstructors();
-	TestRepoConstructors();
-	TestGetSize();
-	TestRepoAdd();
-	TestGetters();
-	TestSetters();
-	TestOperator();
-	TestGetProd();
-	TestReducere();
+	testEntityConstructors();
+	testEntitySetters();
+	testEntityGettters();
+	testEntityOperators();
+
+	testRepositoryConstructors();
+	testRepositorySetters();
+	testRepositoryGetters();
+	testRepositoryAddItem();
+	testRepositoryOperators();
+
+	testServiceConstructors();
+	testServiceSetters();
+	testServiceGetters();
+	testServiceOperators();
+	testServiceAddFunction();
+	testServiceDelFunction();
+	testServiceFindFunction();
+	testServiceImprumutFunction();
+
+	testUserInterfaceConstructors();
+	testUserInterfaceSetters();
+	testUserInterfaceGetters();
 }
